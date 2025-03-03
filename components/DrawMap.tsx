@@ -61,7 +61,6 @@ export default function DrawMap({ onRectangleDrawn }: DrawMapProps = {}): null {
         onRectangleDrawn
       ) {
         const bounds = layer.getBounds();
-        console.log("Raw bounds object:", bounds);
 
         const boundingBox: BoundingBox = {
           north: bounds.getNorth(),
