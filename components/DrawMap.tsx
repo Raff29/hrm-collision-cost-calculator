@@ -1,18 +1,19 @@
-"use client"
+"use client";
 
 import { useMap } from "react-leaflet";
 import "leaflet-draw/dist/leaflet.draw.css";
 import L from "leaflet";
 import "leaflet-draw";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-type DrawCreatedEvent = L.LeafletEvent &  {
+type DrawCreatedEvent = L.LeafletEvent & {
   layer: L.Layer;
   layerType: string;
-}
+};
 
 export default function DrawMap(): null {
   const map = useMap();
+  const currentLayerRef = useRef<L.Layer | null>(null);
 
   useEffect(() => {
     if (!map) return;
@@ -34,13 +35,19 @@ export default function DrawMap(): null {
       const drawEvent = e as DrawCreatedEvent;
       const layer = drawEvent.layer;
       map.addLayer(layer);
-    };
 
-    map.on('draw:created', handleDrawCreated);
+      if (currentLayerRef.current) {
+        map.removeLayer(currentLayerRef.current);
+      }
+
+      map.addLayer(layer);
+      currentLayerRef.current = layer;
+    };
+    map.on("draw:created", handleDrawCreated);
 
     return () => {
       map.removeControl(drawControl);
-      map.off('draw:created', handleDrawCreated);
+      map.off("draw:created", handleDrawCreated);
     };
   }, [map]);
 
