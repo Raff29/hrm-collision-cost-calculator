@@ -7,11 +7,24 @@ import "leaflet-draw";
 import { useEffect, useRef } from "react";
 
 type DrawCreatedEvent = L.LeafletEvent & {
-  layer: L.Layer;
+  layer: L.Layer & {
+    getBounds?: () => L.LatLngBounds;
+  };
   layerType: string;
 };
 
-export default function DrawMap(): null {
+type BoundingBox = {
+  north: number;
+  south: number;
+  east: number;
+  west: number;
+};
+
+interface DrawMapProps {
+  onRectangleDrawn?: (boundingBox: BoundingBox) => void;
+}
+
+export default function DrawMap({ onRectangleDrawn }: DrawMapProps = {}): null {
   const map = useMap();
   const currentLayerRef = useRef<L.Layer | null>(null);
 
@@ -34,7 +47,6 @@ export default function DrawMap(): null {
     const handleDrawCreated = (e: L.LeafletEvent) => {
       const drawEvent = e as DrawCreatedEvent;
       const layer = drawEvent.layer;
-      map.addLayer(layer);
 
       if (currentLayerRef.current) {
         map.removeLayer(currentLayerRef.current);
@@ -42,6 +54,23 @@ export default function DrawMap(): null {
 
       map.addLayer(layer);
       currentLayerRef.current = layer;
+
+      if (
+        drawEvent.layerType === "rectangle" &&
+        layer.getBounds &&
+        onRectangleDrawn
+      ) {
+        const bounds = layer.getBounds();
+        console.log("Raw bounds object:", bounds);
+
+        const boundingBox: BoundingBox = {
+          north: bounds.getNorth(),
+          south: bounds.getSouth(),
+          east: bounds.getEast(),
+          west: bounds.getWest(),
+        };
+        onRectangleDrawn(boundingBox);
+      }
     };
     map.on("draw:created", handleDrawCreated);
 
@@ -49,7 +78,7 @@ export default function DrawMap(): null {
       map.removeControl(drawControl);
       map.off("draw:created", handleDrawCreated);
     };
-  }, [map]);
+  }, [map, onRectangleDrawn]);
 
   return null;
 }
