@@ -48,18 +48,8 @@ export interface CollisionResult {
   collisions: CollisionFeature[];
 }
 
-const createYearTimeFilter = (filterYear?: number): string | undefined => {
-  if (typeof filterYear !== "number") return undefined;
-
-  const startEpoch = new Date(filterYear, 0, 1).getTime();
-  const endEpoch = new Date(filterYear, 11, 31, 23, 59, 59, 999).getTime();
-  return `${startEpoch},${endEpoch}`;
-};
-
-
 export async function fetchCollisionsInBoundingBox(
   boundingBox: BoundingBox,
-  filterYear?: number
 ): Promise<CollisionResult> {
   const { north, south, east, west } = boundingBox;
 
@@ -84,18 +74,12 @@ export async function fetchCollisionsInBoundingBox(
     resultRecordCount: "20000",
   };
 
-  const timeFilter = createYearTimeFilter(filterYear);
-  if (timeFilter) {
-    paramsData.time = timeFilter;
-  }
-
   const params = new URLSearchParams(paramsData);
 
   try {
     const response = await fetch(`${HRM_API_ENDPOINT}?${params}`);
     if (!response.ok) throw new Error("Network response was not ok");
     const data: CollisionResponse = await response.json();
-    console.log("Collision data fetched in bounding box:", data);
     return {
       count: data.features.length,
       collisions: data.features,
