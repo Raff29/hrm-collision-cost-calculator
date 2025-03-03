@@ -1,10 +1,11 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DollarSign, Users, TrendingUp, AlertTriangle } from "lucide-react"
 
-export default function CostAnalysis() {
-  const costData = {
+export default function CostAnalysis({ year }: { year?: number }) {
+  const [costData, setCostData] = useState({
     collisionsPerYear: {
       total: 1000,
       directCost: 500000,
@@ -17,7 +18,38 @@ export default function CostAnalysis() {
       humanCapital: 2055,
       willingnessToPay: 2740,
     },
-  }
+  })
+
+  const [loading, setLoading] = useState(false)
+  const displayYear = year || new Date().getFullYear()
+
+  useEffect(() => {
+    if (year) {
+      setLoading(true)
+
+      // Simulate fetching data for the selected year
+      setTimeout(() => {
+        // This is where you would fetch real data based on the year
+        // For now, we'll just modify the existing data slightly based on the year
+        const yearFactor = (year - 2020) / 10 + 1
+        setCostData({
+          collisionsPerYear: {
+            total: Math.round(1000 * yearFactor),
+            directCost: Math.round(500000 * yearFactor),
+            humanCapital: Math.round(750000 * yearFactor),
+            willingnessToPay: Math.round(1000000 * yearFactor),
+          },
+          costPerDay: {
+            total: Math.round(2740 * yearFactor),
+            directCost: Math.round(1370 * yearFactor),
+            humanCapital: Math.round(2055 * yearFactor),
+            willingnessToPay: Math.round(2740 * yearFactor),
+          },
+        })
+        setLoading(false)
+      }, 800)
+    }
+  }, [year])
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-CA", { style: "currency", currency: "CAD" }).format(amount)
@@ -26,9 +58,14 @@ export default function CostAnalysis() {
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-gradient-to-br from-hrm-blue to-hrm-accent text-white">
+        <Card className="bg-gradient-to-br from-hrm-blue to-hrm-accent text-white relative">
+          {loading && (
+            <div className="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center rounded-lg z-10">
+              <div className="w-6 h-6 border-2 border-hrm-blue border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Collisions per Year</CardTitle>
+            <CardTitle className="text-sm font-medium">Collisions in {displayYear}</CardTitle>
             <AlertTriangle className="h-4 w-4 opacity-70" />
           </CardHeader>
           <CardContent>
@@ -36,7 +73,12 @@ export default function CostAnalysis() {
             <p className="text-xs opacity-70">Total reported incidents</p>
           </CardContent>
         </Card>
-        <Card className="bg-white border-l-4 border-hrm-blue">
+        <Card className="bg-white border-l-4 border-hrm-blue relative">
+          {loading && (
+            <div className="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center rounded-lg z-10">
+              <div className="w-6 h-6 border-2 border-hrm-blue border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-hrm-blue">Total Annual Cost</CardTitle>
             <DollarSign className="h-4 w-4 text-hrm-blue" />
@@ -52,7 +94,12 @@ export default function CostAnalysis() {
             <p className="text-xs text-gray-500">Combined economic impact</p>
           </CardContent>
         </Card>
-        <Card className="bg-white border-l-4 border-hrm-accent">
+        <Card className="bg-white border-l-4 border-hrm-accent relative">
+          {loading && (
+            <div className="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center rounded-lg z-10">
+              <div className="w-6 h-6 border-2 border-hrm-blue border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-hrm-accent">Human Capital Cost</CardTitle>
             <Users className="h-4 w-4 text-hrm-accent" />
@@ -64,7 +111,12 @@ export default function CostAnalysis() {
             <p className="text-xs text-gray-500">Annual productivity loss</p>
           </CardContent>
         </Card>
-        <Card className="bg-white border-l-4 border-hrm-accent">
+        <Card className="bg-white border-l-4 border-hrm-accent relative">
+          {loading && (
+            <div className="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center rounded-lg z-10">
+              <div className="w-6 h-6 border-2 border-hrm-blue border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-hrm-accent">Willingness to Pay</CardTitle>
             <TrendingUp className="h-4 w-4 text-hrm-accent" />
@@ -77,9 +129,14 @@ export default function CostAnalysis() {
           </CardContent>
         </Card>
       </div>
-      <Card className="bg-hrm-light">
+      <Card className="bg-hrm-light relative">
+        {loading && (
+          <div className="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center rounded-lg z-10">
+            <div className="w-6 h-6 border-2 border-hrm-blue border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-hrm-blue">Daily Cost Breakdown</CardTitle>
+          <CardTitle className="text-lg font-semibold text-hrm-blue">Daily Cost Breakdown ({displayYear})</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
