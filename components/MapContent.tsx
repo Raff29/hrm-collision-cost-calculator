@@ -38,13 +38,17 @@ export default function MapContent({
   const [currentBoundingBox, setCurrentBoundingBox] =
     useState<BoundingBox | null>(null);
 
-  const handleRectangleDrawn = async (boundingBox: BoundingBox, yearOverride?: number) => {
+  const handleRectangleDrawn = async (
+    boundingBox: BoundingBox,
+    yearOverride?: number
+  ) => {
     try {
       setCurrentBoundingBox(boundingBox);
 
       const result = await fetchCollisionsData(boundingBox);
 
-      const filterYear = yearOverride !== undefined ? yearOverride : selectedYear
+      const filterYear =
+        yearOverride !== undefined ? yearOverride : selectedYear;
 
       let yearFiltered = result.collisions;
       if (filterYear) {
@@ -96,11 +100,10 @@ export default function MapContent({
     <div>
       <YearSelector onYearChange={handleYearClick} initialYear={selectedYear} />
       <MapContainer
-        center={[44.6488, -63.5752]} // Halifax coordinates
+        center={[44.6488, -63.5752]}
         zoom={13}
         scrollWheelZoom={true}
-        style={{ height: "100%", width: "100%" }}
-        className="h-full w-full z-10 relative" /* Add these Tailwind classes */
+        className="h-[400px] w-full z-10 relative"
         minZoom={10}
         maxBounds={bounds}
         maxBoundsViscosity={1.0}
