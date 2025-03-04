@@ -96,10 +96,11 @@ export default function MapContent({
     <div>
       <YearSelector onYearChange={handleYearClick} initialYear={selectedYear} />
       <MapContainer
-        center={[44.65, -63.57]}
-        zoom={12}
+        center={[44.6488, -63.5752]} // Halifax coordinates
+        zoom={13}
         scrollWheelZoom={true}
-        style={{ height: "400px", width: "100%" }}
+        style={{ height: "100%", width: "100%" }}
+        className="h-full w-full z-10 relative" /* Add these Tailwind classes */
         minZoom={10}
         maxBounds={bounds}
         maxBoundsViscosity={1.0}

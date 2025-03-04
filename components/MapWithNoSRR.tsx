@@ -6,13 +6,13 @@ const MapWithNoSSR = dynamic(
   () => import('./MapContent'),
   { 
     ssr: false,
-    loading: () => <div style={{ height: '400px', background: '#f0f0f0', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>Loading Map...</div>
+    loading: () => <div className="h-[400px] bg-gray-100 flex justify-center items-center w-full">Loading Map...</div>
   }
 );
 
 export default function Map() {
   return (
-    <div style={{ height: '400px', width: '100%' }}>
+    <div className="relative h-[400px] w-full mb-8 overflow-hidden z-10">
       <MapWithNoSSR />
     </div>
   );
