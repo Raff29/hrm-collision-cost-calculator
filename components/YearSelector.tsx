@@ -1,30 +1,36 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
-export default function YearSelector({ onYearChange }: { onYearChange: (year: number) => void }) {
-  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear())
-  const [years, setYears] = useState<number[]>([])
+export default function YearSelector({
+  onYearChange,
+  initialYear,
+}: {
+  onYearChange: (year: number) => void;
+  initialYear?: number;
+}) {
+  const [selectedYear, setSelectedYear] = useState<number>(
+    initialYear || new Date().getFullYear()
+  );
+  const [years, setYears] = useState<number[]>([]);
 
   useEffect(() => {
-    // Generate years from 2020 to current year
-    const currentYear = new Date().getFullYear()
-    const yearArray = []
+    const currentYear = new Date().getFullYear();
+    const yearArray = [];
     for (let year = 2020; year <= currentYear; year++) {
-      yearArray.push(year)
+      yearArray.push(year);
     }
-    setYears(yearArray)
+    setYears(yearArray);
 
-    // Set the current year as default
-    setSelectedYear(currentYear)
-    onYearChange(currentYear)
-  }, [onYearChange])
+    setSelectedYear(currentYear);
+    onYearChange(currentYear);
+  }, [onYearChange]);
 
   const handleYearClick = (year: number) => {
-    setSelectedYear(year)
-    onYearChange(year)
-  }
+    setSelectedYear(year);
+    onYearChange(year);
+  };
 
   return (
     <div className="w-full bg-white border-b border-hrm-blue shadow-sm">
@@ -50,6 +56,5 @@ export default function YearSelector({ onYearChange }: { onYearChange: (year: nu
         </div>
       </div>
     </div>
-  )
+  );
 }
-
