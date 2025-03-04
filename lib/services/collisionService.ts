@@ -10,8 +10,7 @@ interface CollisionAttributes {
   WGS84_LON_COORD: string;
   ROAD_LOCATION_1: string;
   ROAD_LOCATION_2: string;
-  ROAD_CONFIGURATION: string;
-  COLLISION_CONFIGURATION: string;
+  // COLLISION_CONFIGURATION: string;
   NON_FATAL_INJURY: string;
   FATAL_INJURY: string;
   PEDESTRIAN_COLLISIONS: string;
@@ -19,7 +18,7 @@ interface CollisionAttributes {
   ACCIDENT_DATETIME: number;
 }
 
-interface CollisionFeature extends Feature {
+export interface CollisionFeature extends Feature {
   attributes: CollisionAttributes;
   geometry: {
     type: "Point";
