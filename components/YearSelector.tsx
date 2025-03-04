@@ -22,14 +22,12 @@ export default function YearSelector({
       yearArray.push(year);
     }
     setYears(yearArray);
-
-    setSelectedYear(currentYear);
-    onYearChange(currentYear);
-  }, [onYearChange]);
+  }, []);
 
   const handleYearClick = (year: number) => {
     setSelectedYear(year);
     onYearChange(year);
+    console.log(year);
   };
 
   return (
