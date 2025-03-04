@@ -48,7 +48,7 @@ export interface CollisionResult {
   collisions: CollisionFeature[];
 }
 
-export async function fetchCollisionsInBoundingBox(
+export async function fetchCollisionsData(
   boundingBox: BoundingBox,
 ): Promise<CollisionResult> {
   const { north, south, east, west } = boundingBox;
