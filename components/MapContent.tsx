@@ -38,19 +38,21 @@ export default function MapContent({
   const [currentBoundingBox, setCurrentBoundingBox] =
     useState<BoundingBox | null>(null);
 
-  const handleRectangleDrawn = async (boundingBox: BoundingBox) => {
+  const handleRectangleDrawn = async (boundingBox: BoundingBox, yearOverride?: number) => {
     try {
       setCurrentBoundingBox(boundingBox);
 
       const result = await fetchCollisionsData(boundingBox);
 
+      const filterYear = yearOverride !== undefined ? yearOverride : selectedYear
+
       let yearFiltered = result.collisions;
-      if (selectedYear) {
+      if (filterYear) {
         yearFiltered = result.collisions.filter((collision) => {
           const collisionDate = new Date(
             collision.attributes.ACCIDENT_DATETIME
           );
-          return collisionDate.getFullYear() === selectedYear;
+          return collisionDate.getFullYear() === filterYear;
         });
       }
 
@@ -61,7 +63,7 @@ export default function MapContent({
       });
 
       console.log("Collisions fetched:", {
-        year: selectedYear || "All Years",
+        year: filterYear || "All Years",
         totalCount: result.count,
         filteredCount: finalCollisions.length,
         futureRecordsRemoved: result.count - finalCollisions.length,
@@ -86,7 +88,7 @@ export default function MapContent({
     }
 
     if (currentBoundingBox) {
-      handleRectangleDrawn(currentBoundingBox);
+      handleRectangleDrawn(currentBoundingBox, year);
     }
   };
 
