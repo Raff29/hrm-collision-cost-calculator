@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { DollarSign, Users, TrendingUp, AlertTriangle } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DollarSign, Users, TrendingUp, AlertTriangle } from "lucide-react";
 
 export default function CostAnalysis({ year }: { year?: number }) {
   const [costData, setCostData] = useState({
@@ -18,20 +18,20 @@ export default function CostAnalysis({ year }: { year?: number }) {
       humanCapital: 2055,
       willingnessToPay: 2740,
     },
-  })
+  });
 
-  const [loading, setLoading] = useState(false)
-  const displayYear = year || new Date().getFullYear()
+  const [loading, setLoading] = useState(false);
+  const displayYear = year || new Date().getFullYear();
 
   useEffect(() => {
     if (year) {
-      setLoading(true)
+      setLoading(true);
 
       // Simulate fetching data for the selected year
       setTimeout(() => {
         // This is where you would fetch real data based on the year
         // For now, we'll just modify the existing data slightly based on the year
-        const yearFactor = (year - 2020) / 10 + 1
+        const yearFactor = (year - 2020) / 10 + 1;
         setCostData({
           collisionsPerYear: {
             total: Math.round(1000 * yearFactor),
@@ -45,15 +45,18 @@ export default function CostAnalysis({ year }: { year?: number }) {
             humanCapital: Math.round(2055 * yearFactor),
             willingnessToPay: Math.round(2740 * yearFactor),
           },
-        })
-        setLoading(false)
-      }, 800)
+        });
+        setLoading(false);
+      }, 800);
     }
-  }, [year])
+  }, [year]);
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-CA", { style: "currency", currency: "CAD" }).format(amount)
-  }
+    return new Intl.NumberFormat("en-CA", {
+      style: "currency",
+      currency: "CAD",
+    }).format(amount);
+  };
 
   return (
     <div className="space-y-8">
@@ -65,11 +68,15 @@ export default function CostAnalysis({ year }: { year?: number }) {
             </div>
           )}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Collisions in {displayYear}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Collisions in {displayYear}
+            </CardTitle>
             <AlertTriangle className="h-4 w-4 opacity-70" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{costData.collisionsPerYear.total}</div>
+            <div className="text-2xl font-bold">
+              {costData.collisionsPerYear.total}
+            </div>
             <p className="text-xs opacity-70">Total reported incidents</p>
           </CardContent>
         </Card>
@@ -80,7 +87,9 @@ export default function CostAnalysis({ year }: { year?: number }) {
             </div>
           )}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-hrm-blue">Total Annual Cost</CardTitle>
+            <CardTitle className="text-sm font-medium text-hrm-blue">
+              Total Annual Cost
+            </CardTitle>
             <DollarSign className="h-4 w-4 text-hrm-blue" />
           </CardHeader>
           <CardContent>
@@ -88,7 +97,7 @@ export default function CostAnalysis({ year }: { year?: number }) {
               {formatCurrency(
                 costData.collisionsPerYear.directCost +
                   costData.collisionsPerYear.humanCapital +
-                  costData.collisionsPerYear.willingnessToPay,
+                  costData.collisionsPerYear.willingnessToPay
               )}
             </div>
             <p className="text-xs text-gray-500">Combined economic impact</p>
@@ -101,7 +110,9 @@ export default function CostAnalysis({ year }: { year?: number }) {
             </div>
           )}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-hrm-accent">Human Capital Cost</CardTitle>
+            <CardTitle className="text-sm font-medium text-hrm-accent">
+              Human Capital Cost
+            </CardTitle>
             <Users className="h-4 w-4 text-hrm-accent" />
           </CardHeader>
           <CardContent>
@@ -118,14 +129,18 @@ export default function CostAnalysis({ year }: { year?: number }) {
             </div>
           )}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-hrm-accent">Willingness to Pay</CardTitle>
+            <CardTitle className="text-sm font-medium text-hrm-accent">
+              Willingness to Pay
+            </CardTitle>
             <TrendingUp className="h-4 w-4 text-hrm-accent" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-hrm-blue">
               {formatCurrency(costData.collisionsPerYear.willingnessToPay)}
             </div>
-            <p className="text-xs text-gray-500">Value of safety improvements</p>
+            <p className="text-xs text-gray-500">
+              Value of safety improvements
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -136,22 +151,32 @@ export default function CostAnalysis({ year }: { year?: number }) {
           </div>
         )}
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-hrm-blue">Daily Cost Breakdown ({displayYear})</CardTitle>
+          <CardTitle className="text-lg font-semibold text-hrm-blue">
+            Daily Cost Breakdown ({displayYear})
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-hrm-accent">Total Daily Cost:</span>
-              <span className="text-lg font-bold text-hrm-blue">{formatCurrency(costData.costPerDay.total)}</span>
+              <span className="text-sm font-medium text-hrm-accent">
+                Total Daily Cost:
+              </span>
+              <span className="text-lg font-bold text-hrm-blue">
+                {formatCurrency(costData.costPerDay.total)}
+              </span>
             </div>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Direct Cost:</span>
-                <span className="font-medium text-hrm-accent">{formatCurrency(costData.costPerDay.directCost)}</span>
+                <span className="font-medium text-hrm-accent">
+                  {formatCurrency(costData.costPerDay.directCost)}
+                </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Human Capital:</span>
-                <span className="font-medium text-hrm-accent">{formatCurrency(costData.costPerDay.humanCapital)}</span>
+                <span className="font-medium text-hrm-accent">
+                  {formatCurrency(costData.costPerDay.humanCapital)}
+                </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Willingness to Pay:</span>
@@ -164,6 +189,5 @@ export default function CostAnalysis({ year }: { year?: number }) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
-
