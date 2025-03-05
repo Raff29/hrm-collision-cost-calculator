@@ -10,57 +10,45 @@ import {
   Bike,
   PersonStanding,
 } from "lucide-react";
+import { CollisionCostData } from "@/lib/services/costCalculationService";
 
-export default function CostAnalysis({ year }: { year?: number }) {
-  const [costData, setCostData] = useState({
+export default function CostAnalysis({
+  year,
+  costData: providedCostData,
+}: {
+  year?: number;
+  costData?: CollisionCostData | null;
+}) {
+  const defaultCostData: CollisionCostData = {
     collisionsPerYear: {
-      total: 1000,
-      directCost: 500000,
-      humanCapital: 750000,
-      willingnessToPay: 1000000,
-      pedestrian: 120,
-      bicycle: 85,
+      total: 0,
+      directCosts: 0,
+      humanCapitalCosts: 0,
+      willignessToPay: 0,
+      pedestrian: 0,
+      bike: 0,
     },
     costPerDay: {
-      total: 2740,
-      directCost: 1370,
-      humanCapital: 2055,
-      willingnessToPay: 2740,
+      total: 0,
+      directCosts: 0,
+      humanCapitalCosts: 0,
+      willignessToPay: 0,
     },
-  });
+  };
 
+  const [costData, setCostData] = useState<CollisionCostData>(defaultCostData);
   const [loading, setLoading] = useState(false);
   const displayYear = year || new Date().getFullYear();
 
   useEffect(() => {
-    if (year) {
+    if (providedCostData) {
       setLoading(true);
-
-      // Simulate fetching data for the selected year
       setTimeout(() => {
-        // This is where you would fetch real data based on the year
-        // For now, we'll just modify the existing data slightly based on the year
-        const yearFactor = (year - 2020) / 10 + 1;
-        setCostData({
-          collisionsPerYear: {
-            total: Math.round(1000 * yearFactor),
-            directCost: Math.round(500000 * yearFactor),
-            humanCapital: Math.round(750000 * yearFactor),
-            willingnessToPay: Math.round(1000000 * yearFactor),
-            pedestrian: Math.round(120 * yearFactor),
-            bicycle: Math.round(85 * yearFactor),
-          },
-          costPerDay: {
-            total: Math.round(2740 * yearFactor),
-            directCost: Math.round(1370 * yearFactor),
-            humanCapital: Math.round(2055 * yearFactor),
-            willingnessToPay: Math.round(2740 * yearFactor),
-          },
-        });
+        setCostData(providedCostData);
         setLoading(false);
-      }, 800);
+      }, 300);
     }
-  }, [year]);
+  }, [providedCostData]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-CA", {
@@ -106,9 +94,9 @@ export default function CostAnalysis({ year }: { year?: number }) {
           <CardContent>
             <div className="text-2xl font-bold text-hrm-accent">
               {formatCurrency(
-                costData.collisionsPerYear.directCost +
-                  costData.collisionsPerYear.humanCapital +
-                  costData.collisionsPerYear.willingnessToPay
+                costData.collisionsPerYear.directCosts +
+                  costData.collisionsPerYear.humanCapitalCosts +
+                  costData.collisionsPerYear.willignessToPay
               )}
             </div>
             <p className="text-xs text-gray-500">Combined economic impact</p>
@@ -128,7 +116,7 @@ export default function CostAnalysis({ year }: { year?: number }) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-hrm-blue">
-              {formatCurrency(costData.collisionsPerYear.humanCapital)}
+              {formatCurrency(costData.collisionsPerYear.humanCapitalCosts)}
             </div>
             <p className="text-xs text-gray-500">Annual productivity loss</p>
           </CardContent>
@@ -147,7 +135,7 @@ export default function CostAnalysis({ year }: { year?: number }) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-hrm-blue">
-              {formatCurrency(costData.collisionsPerYear.willingnessToPay)}
+              {formatCurrency(costData.collisionsPerYear.willignessToPay)}
             </div>
             <p className="text-xs text-gray-500">
               Value of safety improvements
@@ -211,7 +199,7 @@ export default function CostAnalysis({ year }: { year?: number }) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-hrm-blue">
-              {costData.collisionsPerYear.bicycle}
+              {costData.collisionsPerYear.bike}
             </div>
             <p className="text-xs text-gray-500">
               Incidents involving cyclists
@@ -221,7 +209,7 @@ export default function CostAnalysis({ year }: { year?: number }) {
                 className="h-2 bg-hrm-accent rounded-full"
                 style={{
                   width: `${
-                    (costData.collisionsPerYear.bicycle /
+                    (costData.collisionsPerYear.bike /
                       costData.collisionsPerYear.total) *
                     100
                   }%`,
@@ -230,7 +218,7 @@ export default function CostAnalysis({ year }: { year?: number }) {
             </div>
             <p className="text-xs text-gray-500 mt-1">
               {Math.round(
-                (costData.collisionsPerYear.bicycle /
+                (costData.collisionsPerYear.bike /
                   costData.collisionsPerYear.total) *
                   100
               )}
@@ -264,19 +252,19 @@ export default function CostAnalysis({ year }: { year?: number }) {
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Direct Cost:</span>
                 <span className="font-medium text-hrm-accent">
-                  {formatCurrency(costData.costPerDay.directCost)}
+                  {formatCurrency(costData.costPerDay.directCosts)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Human Capital:</span>
                 <span className="font-medium text-hrm-accent">
-                  {formatCurrency(costData.costPerDay.humanCapital)}
+                  {formatCurrency(costData.costPerDay.humanCapitalCosts)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Willingness to Pay:</span>
                 <span className="font-medium text-hrm-accent">
-                  {formatCurrency(costData.costPerDay.willingnessToPay)}
+                  {formatCurrency(costData.costPerDay.willignessToPay)}
                 </span>
               </div>
             </div>
