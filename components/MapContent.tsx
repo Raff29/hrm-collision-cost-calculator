@@ -11,6 +11,7 @@ import "leaflet-draw";
 import {
   BoundingBox,
   fetchCollisionsData,
+  nonVehicleCollisionsData,
 } from "@/lib/services/collisionService";
 import YearSelector from "./YearSelector";
 
@@ -50,21 +51,23 @@ export default function MapContent({
       const filterYear =
         yearOverride !== undefined ? yearOverride : selectedYear;
 
-      let yearFiltered = result.collisions;
-      if (filterYear) {
-        yearFiltered = result.collisions.filter((collision) => {
+      let yearFiltered = result.collisions || [];
+      if (filterYear && yearFiltered.length > 0) {
+        yearFiltered = yearFiltered.filter((collision) => {
           const collisionDate = new Date(
             collision.attributes.ACCIDENT_DATETIME
           );
           return collisionDate.getFullYear() === filterYear;
         });
       }
-
+      
       const today = new Date();
       const finalCollisions = yearFiltered.filter((collision) => {
         const collisionDate = new Date(collision.attributes.ACCIDENT_DATETIME);
         return collisionDate <= today;
       });
+
+      const nonAutoData = nonVehicleCollisionsData(finalCollisions);
 
       console.log("Collisions fetched:", {
         year: filterYear || "All Years",
@@ -72,6 +75,8 @@ export default function MapContent({
         filteredCount: finalCollisions.length,
         futureRecordsRemoved: result.count - finalCollisions.length,
         coordinates: boundingBox,
+        pedestrian: nonAutoData.pedestrian,
+        bicycle: nonAutoData.bike,
         sampleCollisionDate: finalCollisions[0]
           ? new Date(
               finalCollisions[0].attributes.ACCIDENT_DATETIME
@@ -97,7 +102,7 @@ export default function MapContent({
   };
 
   return (
-    <div>
+      <div>
       <YearSelector onYearChange={handleYearClick} initialYear={selectedYear} />
       <MapContainer
         center={[44.6488, -63.5752]}
