@@ -12,7 +12,7 @@ const MapWithNoSSR = dynamic(
 
 export default function Map() {
   return (
-    <div className="relative h-[400px] w-full mb-8 overflow-hidden z-10">
+    <div className="relative w-full mb-8 overflow-hidden z-10">
       <MapWithNoSSR />
     </div>
   );
