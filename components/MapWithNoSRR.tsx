@@ -1,6 +1,12 @@
 "use client";
 
 import dynamic from 'next/dynamic';
+import { CollisionCostData } from '@/lib/services/costCalculationService';
+
+interface MapProps {
+  onYearChange? : (year: number) => void;
+  onCollisionDataChange?: (costData: CollisionCostData) => void;
+}
 
 const MapWithNoSSR = dynamic(
   () => import('./MapContent'),
@@ -10,10 +16,13 @@ const MapWithNoSSR = dynamic(
   }
 );
 
-export default function Map() {
+export default function Map({ onYearChange, onCollisionDataChange}: MapProps) {
   return (
     <div className="relative w-full mb-8 overflow-hidden z-10">
-      <MapWithNoSSR />
+      <MapWithNoSSR 
+      onYearChange={onYearChange}
+      onCollisionDataChange={onCollisionDataChange}
+      />
     </div>
   );
 }
