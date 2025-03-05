@@ -47,8 +47,29 @@ export interface CollisionResult {
   collisions: CollisionFeature[];
 }
 
+export interface NonAutoCollisions {
+  pedestrian: number;
+  bike: number;
+}
+
+export function nonVehicleCollisionsData(
+  collisionData: CollisionFeature[]
+): NonAutoCollisions {
+  const collisionCount: NonAutoCollisions = { pedestrian: 0, bike: 0 };
+  for (const collision of collisionData) {
+    if (collision.attributes.PEDESTRIAN_COLLISIONS === "Y") {
+      collisionCount.pedestrian += 1;
+    } else if (collision.attributes.BICYCLE_COLLISIONS === "Y") {
+      collisionCount.bike += 1;
+    } else {
+      continue;
+    }
+  }
+  return collisionCount;
+}
+
 export async function fetchCollisionsData(
-  boundingBox: BoundingBox,
+  boundingBox: BoundingBox
 ): Promise<CollisionResult> {
   const { north, south, east, west } = boundingBox;
 
