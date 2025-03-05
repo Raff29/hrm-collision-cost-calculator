@@ -13,7 +13,7 @@ export enum CollisionSeverity {
   PROPERTY_DAMAGE_ONLY = "Property Damage Only",
 }
 
-function calculateTotalCost(costs: Omit<CostBreakdown, 'totalCosts'>): number {
+function calculateTotalCost(costs: Omit<CostBreakdown, "totalCosts">): number {
   return costs.directCosts + costs.humanCapitalCosts + costs.willignessToPay;
 }
 
@@ -24,7 +24,7 @@ export const COLLISION_COSTS: Record<CollisionSeverity, CostBreakdown> = {
     willignessToPay: 158654,
     get totalCosts() {
       return calculateTotalCost(this);
-    }
+    },
   },
   [CollisionSeverity.FATALITY]: {
     directCosts: 225558,
@@ -32,7 +32,7 @@ export const COLLISION_COSTS: Record<CollisionSeverity, CostBreakdown> = {
     willignessToPay: 6707228,
     get totalCosts() {
       return calculateTotalCost(this);
-    }
+    },
   },
   [CollisionSeverity.PROPERTY_DAMAGE_ONLY]: {
     directCosts: 14065,
@@ -40,16 +40,18 @@ export const COLLISION_COSTS: Record<CollisionSeverity, CostBreakdown> = {
     willignessToPay: 0,
     get totalCosts() {
       return calculateTotalCost(this);
-    }
+    },
   },
 };
 
 export function determineSeverity(
   collision: CollisionFeature
 ): CollisionSeverity {
-  if (collision.attributes.FATAL_INJURY === "Y") {
+  if (collision.attributes.FATAL_INJURY === "YES") {
     return CollisionSeverity.FATALITY;
-  } else if (collision.attributes.NON_FATAL_INJURY === "Y") {
+  } else if (collision.attributes.NON_FATAL_INJURY === "YES" || 
+            collision.attributes.PEDESTRIAN_COLLISIONS === "Y" ||
+            collision.attributes.BICYCLE_COLLISIONS === "Y") {
     return CollisionSeverity.INJURY;
   } else {
     return CollisionSeverity.PROPERTY_DAMAGE_ONLY;
@@ -93,4 +95,78 @@ export function calculateCostsBySeverity(
   }
 
   return result;
+}
+
+export interface CollisionCostData {
+  collisionsPerYear: {
+    total: number;
+    directCosts: number;
+    humanCapitalCosts: number;
+    willignessToPay: number;
+    pedestrian: number;
+    bike: number;
+  };
+  costPerDay: {
+    total: number;
+    directCosts: number;
+    humanCapitalCosts: number;
+    willignessToPay: number;
+  };
+}
+
+export function calculateCollisionCostData(
+  collisions: CollisionFeature[],
+  pedestrianCount: number,
+  bikeCount: number
+): CollisionCostData {
+  const severityCounts = {
+    [CollisionSeverity.FATALITY]: 0,
+    [CollisionSeverity.INJURY]: 0,
+    [CollisionSeverity.PROPERTY_DAMAGE_ONLY]: 0,
+  };
+
+  for (const collision of collisions) {
+    const severity = determineSeverity(collision);
+    severityCounts[severity]++;
+  }
+  console.log("Collision severity counts:", severityCounts);
+
+  const totalDirectCosts = calculateTotalCollisionCost(
+    collisions,
+    "directCosts"
+  );
+  const totalHumanCapitalCosts = calculateTotalCollisionCost(
+    collisions,
+    "humanCapitalCosts"
+  );
+
+  console.log("Human capital costs:", totalHumanCapitalCosts);
+
+  const totalWillingnessToPay = calculateTotalCollisionCost(
+    collisions,
+    "willignessToPay"
+  );
+  console.log("willignessToPay", totalWillingnessToPay);
+
+
+  const totalCosts = calculateTotalCollisionCost(collisions, "totalCosts");
+
+
+
+  return {
+    collisionsPerYear: {
+      total: collisions.length,
+      directCosts: totalDirectCosts,
+      humanCapitalCosts: totalHumanCapitalCosts,
+      willignessToPay: totalWillingnessToPay,
+      pedestrian: pedestrianCount,
+      bike: bikeCount,
+    },
+    costPerDay: {
+      total: Math.round(totalCosts / collisions.length),
+      directCosts: Math.round(totalDirectCosts / collisions.length),
+      humanCapitalCosts: Math.round(totalHumanCapitalCosts / collisions.length),
+      willignessToPay: Math.round(totalWillingnessToPay / collisions.length),
+    },
+  };
 }
