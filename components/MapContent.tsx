@@ -14,6 +14,10 @@ import {
   nonVehicleCollisionsData,
 } from "@/lib/services/collisionService";
 import YearSelector from "./YearSelector";
+import {
+  CollisionCostData,
+  calculateCollisionCostData,
+} from "@/lib/services/costCalculationService";
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -26,8 +30,10 @@ L.Icon.Default.mergeOptions({
 
 export default function MapContent({
   onYearChange,
+  onCollisionDataChange,
 }: {
   onYearChange?: (year: number) => void;
+  onCollisionDataChange?: (costData: CollisionCostData) => void;
 }) {
   const bounds = L.latLngBounds([
     [44.45, -64.3],
@@ -60,7 +66,7 @@ export default function MapContent({
           return collisionDate.getFullYear() === filterYear;
         });
       }
-      
+
       const today = new Date();
       const finalCollisions = yearFiltered.filter((collision) => {
         const collisionDate = new Date(collision.attributes.ACCIDENT_DATETIME);
@@ -68,6 +74,17 @@ export default function MapContent({
       });
 
       const nonAutoData = nonVehicleCollisionsData(finalCollisions);
+
+      const costData = calculateCollisionCostData(
+        finalCollisions,
+        nonAutoData.pedestrian,
+        nonAutoData.bike
+      );
+
+      if (onCollisionDataChange) {
+        onCollisionDataChange(costData);
+        console.log(costData)
+      }
 
       console.log("Collisions fetched:", {
         year: filterYear || "All Years",
@@ -102,7 +119,7 @@ export default function MapContent({
   };
 
   return (
-      <div>
+    <div>
       <YearSelector onYearChange={handleYearClick} initialYear={selectedYear} />
       <MapContainer
         center={[44.6488, -63.5752]}
