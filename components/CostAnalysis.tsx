@@ -2,7 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, Users, TrendingUp, AlertTriangle } from "lucide-react";
+import {
+  DollarSign,
+  Users,
+  TrendingUp,
+  AlertTriangle,
+  Bike,
+  PersonStanding,
+} from "lucide-react";
 
 export default function CostAnalysis({ year }: { year?: number }) {
   const [costData, setCostData] = useState({
@@ -11,6 +18,8 @@ export default function CostAnalysis({ year }: { year?: number }) {
       directCost: 500000,
       humanCapital: 750000,
       willingnessToPay: 1000000,
+      pedestrian: 120,
+      bicycle: 85,
     },
     costPerDay: {
       total: 2740,
@@ -38,6 +47,8 @@ export default function CostAnalysis({ year }: { year?: number }) {
             directCost: Math.round(500000 * yearFactor),
             humanCapital: Math.round(750000 * yearFactor),
             willingnessToPay: Math.round(1000000 * yearFactor),
+            pedestrian: Math.round(120 * yearFactor),
+            bicycle: Math.round(85 * yearFactor),
           },
           costPerDay: {
             total: Math.round(2740 * yearFactor),
@@ -140,6 +151,90 @@ export default function CostAnalysis({ year }: { year?: number }) {
             </div>
             <p className="text-xs text-gray-500">
               Value of safety improvements
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="bg-white border-l-4 border-hrm-blue relative">
+          {loading && (
+            <div className="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center rounded-lg z-10">
+              <div className="w-6 h-6 border-2 border-hrm-blue border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-hrm-blue">
+              Pedestrian Collisions
+            </CardTitle>
+            <PersonStanding className="h-4 w-4 text-hrm-blue" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-hrm-accent">
+              {costData.collisionsPerYear.pedestrian}
+            </div>
+            <p className="text-xs text-gray-500">
+              Incidents involving pedestrians
+            </p>
+            <div className="mt-2 h-2 bg-gray-200 rounded-full">
+              <div
+                className="h-2 bg-hrm-blue rounded-full"
+                style={{
+                  width: `${
+                    (costData.collisionsPerYear.pedestrian /
+                      costData.collisionsPerYear.total) *
+                    100
+                  }%`,
+                }}
+              ></div>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">
+              {Math.round(
+                (costData.collisionsPerYear.pedestrian /
+                  costData.collisionsPerYear.total) *
+                  100
+              )}
+              % of total collisions
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="bg-white border-l-4 border-hrm-accent relative">
+          {loading && (
+            <div className="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center rounded-lg z-10">
+              <div className="w-6 h-6 border-2 border-hrm-blue border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-hrm-accent">
+              Bicycle Collisions
+            </CardTitle>
+            <Bike className="h-4 w-4 text-hrm-accent" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-hrm-blue">
+              {costData.collisionsPerYear.bicycle}
+            </div>
+            <p className="text-xs text-gray-500">
+              Incidents involving cyclists
+            </p>
+            <div className="mt-2 h-2 bg-gray-200 rounded-full">
+              <div
+                className="h-2 bg-hrm-accent rounded-full"
+                style={{
+                  width: `${
+                    (costData.collisionsPerYear.bicycle /
+                      costData.collisionsPerYear.total) *
+                    100
+                  }%`,
+                }}
+              ></div>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">
+              {Math.round(
+                (costData.collisionsPerYear.bicycle /
+                  costData.collisionsPerYear.total) *
+                  100
+              )}
+              % of total collisions
             </p>
           </CardContent>
         </Card>
