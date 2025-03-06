@@ -1,6 +1,6 @@
 "use client"
 
-import { Github, Mail } from "lucide-react"
+import { FaGithub, FaEnvelope } from "react-icons/fa"
 
 export default function Footer() {
   return (
@@ -9,15 +9,15 @@ export default function Footer() {
         <p className="mb-4 md:mb-0">Developed by Raphael Pinto</p>
         <div className="flex space-x-4">
           <a
-            href="https://github.com/yourusername"
+            href="https://github.com/raff29"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-hrm-light transition-colors"
           >
-            <Github className="w-6 h-6" />
+            <FaGithub className="w-6 h-6" />
           </a>
-          <a href="mailto:your.email@example.com" className="hover:text-hrm-light transition-colors">
-            <Mail className="w-6 h-6" />
+          <a href="mailto:raphael.pinto1@outlook.com" className="hover:text-hrm-light transition-colors">
+            <FaEnvelope className="w-6 h-6" />
           </a>
         </div>
       </div>
