@@ -55,18 +55,17 @@ export interface NonAutoCollisions {
 export function nonVehicleCollisionsData(
   collisionData: CollisionFeature[]
 ): NonAutoCollisions {
-  return collisionData.reduce(
-    (count, collision) => {
-      const attrs = collision.attributes;
-      if (attrs.PEDESTRIAN_COLLISIONS === "Y") {
-        count.pedestrian += 1;
-      } else if (attrs.BICYCLE_COLLISIONS === "Y") {
-        count.bike += 1;
-      }
-      return count;
-    },
-    { pedestrian: 0, bike: 0 }
-  );
+  const collisionCount: NonAutoCollisions = { pedestrian: 0, bike: 0 };
+  for (const collision of collisionData) {
+    if (collision.attributes.PEDESTRIAN_COLLISIONS === "Y") {
+      collisionCount.pedestrian += 1;
+    } else if (collision.attributes.BICYCLE_COLLISIONS === "Y") {
+      collisionCount.bike += 1;
+    } else {
+      continue;
+    }
+  }
+  return collisionCount;
 }
 
 export async function fetchCollisionsData(
