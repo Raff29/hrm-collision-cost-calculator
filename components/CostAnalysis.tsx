@@ -57,9 +57,16 @@ export default function CostAnalysis({
     }).format(amount);
   };
 
-  const getPercentage = (part: number, total: number): number => {
-    if (!total) return 0;
-    return Math.round((part / total) * 100);
+  const getPercentage = (part: number, total: number): string => {
+    if (!total) return "0%";
+
+    const percentage = (part / total) * 100;
+
+    if (percentage < 1) {
+      return percentage.toFixed(1) + "%";
+    }
+
+    return Math.round(percentage) + "%";
   };
 
   return (
@@ -184,7 +191,7 @@ export default function CostAnalysis({
                 costData.collisionsPerYear.pedestrian,
                 costData.collisionsPerYear.total
               )}
-              % of total collisions
+              {" of total collisions"}
             </p>
           </CardContent>
         </Card>
@@ -223,7 +230,7 @@ export default function CostAnalysis({
                 costData.collisionsPerYear.bike,
                 costData.collisionsPerYear.total
               )}
-              % of total collisions
+              {" of total collisions"}
             </p>
           </CardContent>
         </Card>
