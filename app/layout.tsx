@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "HRM Vehicle Collision Cost Estimator",
   description:
-    "Estimate the cost of vehicle collisions in Halifax Regional Municipality",
+    "Estimate the cost of vehicle collisions in the Halifax Regional Municipality",
 };
 
 export default function RootLayout({
