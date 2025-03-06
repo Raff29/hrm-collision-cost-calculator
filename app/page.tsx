@@ -1,4 +1,3 @@
-import AboutCalculation from "@/components/AboutCalculation";
 import CollisionDataProvider from "@/components/CollisionDataProvider";
 
 export default function Home() {
@@ -9,7 +8,6 @@ export default function Home() {
           HRM Vehicle Collision Cost Estimator
         </h1>
         <CollisionDataProvider />
-        <AboutCalculation />
       </div>
     </main>
   );
