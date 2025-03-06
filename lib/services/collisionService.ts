@@ -68,9 +68,27 @@ export function nonVehicleCollisionsData(
   return collisionCount;
 }
 
+const collisionCache = new Map<
+  string,
+  {
+    timestamp: number;
+    data: CollisionResult;
+  }
+>();
+
+const CACHE_TTL = 30 * 60 * 2000;
+
 export async function fetchCollisionsData(
   boundingBox: BoundingBox
 ): Promise<CollisionResult> {
+  const cacheKey = `${boundingBox.north},${boundingBox.south},${boundingBox.east},${boundingBox.west}`;
+
+  const cachedData = collisionCache.get(cacheKey);
+  if (cachedData && Date.now() - cachedData.timestamp < CACHE_TTL) {
+    console.log("Using cached collision data");
+    return cachedData.data;
+  }
+
   const { north, south, east, west } = boundingBox;
 
   const geometry = {
@@ -100,10 +118,18 @@ export async function fetchCollisionsData(
     const response = await fetch(`${HRM_API_ENDPOINT}?${params}`);
     if (!response.ok) throw new Error("Network response was not ok");
     const data: CollisionResponse = await response.json();
-    return {
+
+    const result = {
       count: data.features.length,
       collisions: data.features,
     };
+
+    collisionCache.set(cacheKey, {
+      timestamp: Date.now(),
+      data: result,
+    });
+
+    return result;
   } catch (error) {
     console.error("Error fetching collision data in bounding box:", error);
     throw error;
