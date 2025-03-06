@@ -85,7 +85,7 @@ export async function fetchCollisionsData(
 
   const cachedData = collisionCache.get(cacheKey);
   if (cachedData && Date.now() - cachedData.timestamp < CACHE_TTL) {
-    console.log("Using cached collision data");
+    // console.log("Using cached collision data");
     return cachedData.data;
   }
 

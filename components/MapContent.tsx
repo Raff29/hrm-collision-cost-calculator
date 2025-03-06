@@ -89,21 +89,21 @@ export default function MapContent({
         console.log(costData)
       }
 
-      console.log("Collisions fetched:", {
-        year: filterYear || "All Years",
-        totalCount: result.count,
-        filteredCount: finalCollisions.length,
-        futureRecordsRemoved: result.count - finalCollisions.length,
-        coordinates: boundingBox,
-        pedestrian: nonAutoData.pedestrian,
-        bicycle: nonAutoData.bike,
-        sampleCollisionDate: finalCollisions[0]
-          ? new Date(
-              finalCollisions[0].attributes.ACCIDENT_DATETIME
-            ).toLocaleString()
-          : "No collisions found",
-        sampleCollision: finalCollisions[0]?.attributes,
-      });
+      // console.log("Collisions fetched:", {
+      //   year: filterYear || "All Years",
+      //   totalCount: result.count,
+      //   filteredCount: finalCollisions.length,
+      //   futureRecordsRemoved: result.count - finalCollisions.length,
+      //   coordinates: boundingBox,
+      //   pedestrian: nonAutoData.pedestrian,
+      //   bicycle: nonAutoData.bike,
+      //   sampleCollisionDate: finalCollisions[0]
+      //     ? new Date(
+      //         finalCollisions[0].attributes.ACCIDENT_DATETIME
+      //       ).toLocaleString()
+      //     : "No collisions found",
+      //   sampleCollision: finalCollisions[0]?.attributes,
+      // });
     } catch (error) {
       console.error("Error fetching collisions:", error);
       setError("Failed to fetch collision data. Please try again.");
