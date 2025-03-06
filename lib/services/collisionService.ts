@@ -5,12 +5,12 @@ const HRM_API_ENDPOINT =
 
 interface CollisionAttributes {
   COLLISION_SK: number;
-  CASE_FILE_NUMBER: number;
+  // CASE_FILE_NUMBER: number;
   WGS84_LAT_COORD: string;
   WGS84_LON_COORD: string;
   ROAD_LOCATION_1: string;
-  ROAD_LOCATION_2: string;
-  // COLLISION_CONFIGURATION: string;
+  // ROAD_LOCATION_2: string;
+  COLLISION_CONFIGURATION: string;
   NON_FATAL_INJURY: string;
   FATAL_INJURY: string;
   PEDESTRIAN_COLLISIONS: string;
@@ -55,17 +55,18 @@ export interface NonAutoCollisions {
 export function nonVehicleCollisionsData(
   collisionData: CollisionFeature[]
 ): NonAutoCollisions {
-  const collisionCount: NonAutoCollisions = { pedestrian: 0, bike: 0 };
-  for (const collision of collisionData) {
-    if (collision.attributes.PEDESTRIAN_COLLISIONS === "Y") {
-      collisionCount.pedestrian += 1;
-    } else if (collision.attributes.BICYCLE_COLLISIONS === "Y") {
-      collisionCount.bike += 1;
-    } else {
-      continue;
-    }
-  }
-  return collisionCount;
+  return collisionData.reduce(
+    (count, collision) => {
+      const attrs = collision.attributes;
+      if (attrs.PEDESTRIAN_COLLISIONS === "Y") {
+        count.pedestrian += 1;
+      } else if (attrs.BICYCLE_COLLISIONS === "Y") {
+        count.bike += 1;
+      }
+      return count;
+    },
+    { pedestrian: 0, bike: 0 }
+  );
 }
 
 export async function fetchCollisionsData(
@@ -84,7 +85,7 @@ export async function fetchCollisionsData(
   const paramsData: Record<string, string> = {
     where: "1=1",
     outFields:
-      "COLLISION_SK,CASE_FILE_NUMBER,WGS84_LAT_COORD,WGS84_LON_COORD,ROAD_LOCATION_1,ROAD_LOCATION_2,ROAD_CONFIGURATION,COLLISION_CONFIGURATION,NON_FATAL_INJURY,FATAL_INJURY,PEDESTRIAN_COLLISIONS,BICYCLE_COLLISIONS,ACCIDENT_DATETIME",
+      "COLLISION_SK,WGS84_LAT_COORD,WGS84_LON_COORD,ROAD_LOCATION_1,COLLISION_CONFIGURATION,NON_FATAL_INJURY,FATAL_INJURY,PEDESTRIAN_COLLISIONS,BICYCLE_COLLISIONS,ACCIDENT_DATETIME",
     outSR: "4326",
     f: "json",
     geometry: JSON.stringify(geometry),
