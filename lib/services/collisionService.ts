@@ -1,7 +1,7 @@
 import { Feature } from "geojson";
 
-const HRM_API_ENDPOINT =
-  "https://services2.arcgis.com/11XBiaBYA9Ep0yNJ/arcgis/rest/services/Traffic_Collisions/FeatureServer/0/query";
+
+const HRM_API_ENDPOINT = process.env.NEXT_PUBLIC_HRM_API_ENDPOINT;
 
 interface CollisionAttributes {
   COLLISION_SK: number;
