@@ -44,12 +44,15 @@ export default function MapContent({
   );
   const [currentBoundingBox, setCurrentBoundingBox] =
     useState<BoundingBox | null>(null);
+  
+    const [error, setError] = useState<string | null>(null);
 
   const handleRectangleDrawn = async (
     boundingBox: BoundingBox,
     yearOverride?: number
   ) => {
     try {
+      setError(null);
       setCurrentBoundingBox(boundingBox);
 
       const result = await fetchCollisionsData(boundingBox);
@@ -103,8 +106,8 @@ export default function MapContent({
       });
     } catch (error) {
       console.error("Error fetching collisions:", error);
-    } finally {
-    }
+      setError("Failed to fetch collision data. Please try again.");
+    } 
   };
 
   const handleYearClick = (year: number) => {
@@ -121,6 +124,7 @@ export default function MapContent({
   return (
     <div>
       <YearSelector onYearChange={handleYearClick} initialYear={selectedYear} />
+      {error && <div className="bg-red-100 p-3 mb-3 text-red-800 rounded">{error}</div>}
       <MapContainer
         center={[44.6488, -63.5752]}
         zoom={13}
