@@ -18,8 +18,8 @@ module.exports = {
     extend: {
       colors: {
         "hrm-blue": "#0072CE",
-        "hrm-accent": "#3A5A78", // A more subdued accent color
-        "hrm-light": "#E5F0FF", // A light blue for backgrounds
+        "hrm-accent": "#3A5A78", 
+        "hrm-light": "#E5F0FF", 
         "hrm-yellow": "#FFD400",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -76,6 +76,6 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [import("tailwindcss-animate")],
 }
 
