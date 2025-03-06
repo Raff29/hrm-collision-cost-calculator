@@ -27,7 +27,6 @@ export default function YearSelector({
   const handleYearClick = (year: number) => {
     setSelectedYear(year);
     onYearChange(year);
-    console.log(year);
   };
 
   return (
