@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { ToastContextProvider } from "@/components/ui/toast.context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,9 +24,11 @@ export default function RootLayout({
       <body
         className={`${inter.className} flex flex-col min-h-screen bg-gradient-to-br from-white to-hrm-light`}
       >
-        <Header />
-        {children}
-        <Footer />
+        <ToastContextProvider>
+          <Header />
+          {children}
+          <Footer />
+        </ToastContextProvider>
       </body>
     </html>
   );
