@@ -18,6 +18,7 @@ import {
   CollisionCostData,
   calculateCollisionCostData,
 } from "@/lib/services/costCalculationService";
+import { useSnackbar } from "@/hooks/use-toast";
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -44,15 +45,15 @@ export default function MapContent({
   );
   const [currentBoundingBox, setCurrentBoundingBox] =
     useState<BoundingBox | null>(null);
-  
-    const [error, setError] = useState<string | null>(null);
+
+
+  const { showError } = useSnackbar();
 
   const handleRectangleDrawn = async (
     boundingBox: BoundingBox,
     yearOverride?: number
   ) => {
     try {
-      setError(null);
       setCurrentBoundingBox(boundingBox);
 
       const result = await fetchCollisionsData(boundingBox);
@@ -86,7 +87,7 @@ export default function MapContent({
 
       if (onCollisionDataChange) {
         onCollisionDataChange(costData);
-        console.log(costData)
+        console.log(costData);
       }
 
       // console.log("Collisions fetched:", {
@@ -105,9 +106,12 @@ export default function MapContent({
       //   sampleCollision: finalCollisions[0]?.attributes,
       // });
     } catch (error) {
-      console.error("Error fetching collisions:", error);
-      setError("Failed to fetch collision data. Please try again.");
-    } 
+      if (error instanceof Error) {
+        showError(error.message);
+      } else {
+        showError(String(error) || "An unknown error occurred");
+      }
+    }
   };
 
   const handleYearClick = (year: number) => {
@@ -124,7 +128,6 @@ export default function MapContent({
   return (
     <div>
       <YearSelector onYearChange={handleYearClick} initialYear={selectedYear} />
-      {error && <div className="bg-red-100 p-3 mb-3 text-red-800 rounded">{error}</div>}
       <MapContainer
         center={[44.6488, -63.5752]}
         zoom={13}
