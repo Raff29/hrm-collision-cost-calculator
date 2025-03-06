@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <header className="bg-gradient-to-r from-hrm-blue to-hrm-accent text-white p-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Halifax Regional Municipality</h2>
+        <h2 className="text-2xl font-bold">HRM Crash Analytics</h2>
         <nav>
           <ul className="flex space-x-4">
             <li>
@@ -20,9 +20,9 @@ export default function Header() {
               </Link>
             </li>
             <li>
-              <a href="#" className="hover:text-hrm-light transition-colors">
+              <Link href="/#contact" className="hover:text-hrm-light transition-colors">
                 Contact
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
