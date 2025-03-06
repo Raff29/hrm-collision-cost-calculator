@@ -87,7 +87,7 @@ export default function MapContent({
 
       if (onCollisionDataChange) {
         onCollisionDataChange(costData);
-        console.log(costData);
+        // console.log(costData);
       }
 
       // console.log("Collisions fetched:", {

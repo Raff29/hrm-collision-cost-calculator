@@ -155,12 +155,12 @@ export function calculateCollisionCostData(
     ...pdoCollisions,
   ];
 
-  const severityCounts = {
-    [CollisionSeverity.FATALITY]: fatalCollisions.length,
-    [CollisionSeverity.INJURY]: adjustedInjuryCount,
-    [CollisionSeverity.PROPERTY_DAMAGE_ONLY]: pdoCollisions.length,
-  };
-  console.log("Adjusted collision severity counts:", severityCounts);
+  // const severityCounts = {
+  //   [CollisionSeverity.FATALITY]: fatalCollisions.length,
+  //   [CollisionSeverity.INJURY]: adjustedInjuryCount,
+  //   [CollisionSeverity.PROPERTY_DAMAGE_ONLY]: pdoCollisions.length,
+  // };
+  // console.log("Adjusted collision severity counts:", severityCounts);
 
   const totalDirectCosts = calculateTotalCollisionCost(
     adjustedCollisions,

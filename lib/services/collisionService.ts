@@ -52,6 +52,7 @@ export interface NonAutoCollisions {
   bike: number;
 }
 
+
 export function nonVehicleCollisionsData(
   collisionData: CollisionFeature[]
 ): NonAutoCollisions {
