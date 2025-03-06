@@ -121,42 +121,71 @@ export function calculateCollisionCostData(
   pedestrianCount: number,
   bikeCount: number
 ): CollisionCostData {
-  const severityCounts = {
-    [CollisionSeverity.FATALITY]: 0,
-    [CollisionSeverity.INJURY]: 0,
-    [CollisionSeverity.PROPERTY_DAMAGE_ONLY]: 0,
-  };
+  const fatalCollisions: CollisionFeature[] = [];
+  const injuryCollisions: CollisionFeature[] = [];
+  const pdoCollisions: CollisionFeature[] = []; // property damage
 
   for (const collision of collisions) {
     const severity = determineSeverity(collision);
-    severityCounts[severity]++;
+    if (severity === CollisionSeverity.FATALITY) {
+      fatalCollisions.push(collision);
+    } else if (severity == CollisionSeverity.INJURY) {
+      injuryCollisions.push(collision);
+    } else {
+      pdoCollisions.push(collision);
+    }
   }
-  console.log("Collision severity counts:", severityCounts);
+
+  const INJURY_UNDER_REPORTING_FACTOR = 1.78;
+  const originalInjuryCount = injuryCollisions.length;
+  const adjustedInjuryCount = Math.round(
+    originalInjuryCount * INJURY_UNDER_REPORTING_FACTOR
+  );
+  const additionalInjuries = adjustedInjuryCount - originalInjuryCount;
+
+  const adjustedInjuryCollisions = [...injuryCollisions];
+  for (let i = 0; i < additionalInjuries && pdoCollisions.length > 0; i++) {
+    const convertedCollision = pdoCollisions.pop()!;
+    adjustedInjuryCollisions.push(convertedCollision);
+  }
+
+  const adjustedCollisions = [
+    ...fatalCollisions,
+    ...adjustedInjuryCollisions,
+    ...pdoCollisions,
+  ];
+
+  const severityCounts = {
+    [CollisionSeverity.FATALITY]: fatalCollisions.length,
+    [CollisionSeverity.INJURY]: adjustedInjuryCount,
+    [CollisionSeverity.PROPERTY_DAMAGE_ONLY]: pdoCollisions.length,
+  };
+  console.log("Adjusted collision severity counts:", severityCounts);
 
   const totalDirectCosts = calculateTotalCollisionCost(
-    collisions,
+    adjustedCollisions,
     "directCosts"
   );
   const totalHumanCapitalCosts = calculateTotalCollisionCost(
-    collisions,
+    adjustedCollisions,
     "humanCapitalCosts"
   );
 
-  console.log("Human capital costs:", totalHumanCapitalCosts);
-
   const totalWillingnessToPay = calculateTotalCollisionCost(
-    collisions,
+    adjustedCollisions,
     "willignessToPay"
   );
-  console.log("willignessToPay", totalWillingnessToPay);
 
-  const totalCosts = calculateTotalCollisionCost(collisions, "totalCosts");
+  const totalCosts = calculateTotalCollisionCost(
+    adjustedCollisions,
+    "totalCosts"
+  );
 
   const daysInYear = 365;
 
   return {
     collisionsPerYear: {
-      total: collisions.length,
+      total: adjustedCollisions.length,
       directCosts: totalDirectCosts,
       humanCapitalCosts: totalHumanCapitalCosts,
       willignessToPay: totalWillingnessToPay,
