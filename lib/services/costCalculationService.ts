@@ -49,9 +49,11 @@ export function determineSeverity(
 ): CollisionSeverity {
   if (collision.attributes.FATAL_INJURY === "YES") {
     return CollisionSeverity.FATALITY;
-  } else if (collision.attributes.NON_FATAL_INJURY === "YES" || 
-            collision.attributes.PEDESTRIAN_COLLISIONS === "Y" ||
-            collision.attributes.BICYCLE_COLLISIONS === "Y") {
+  } else if (
+    collision.attributes.NON_FATAL_INJURY === "YES" ||
+    collision.attributes.PEDESTRIAN_COLLISIONS === "Y" ||
+    collision.attributes.BICYCLE_COLLISIONS === "Y"
+  ) {
     return CollisionSeverity.INJURY;
   } else {
     return CollisionSeverity.PROPERTY_DAMAGE_ONLY;
@@ -148,10 +150,9 @@ export function calculateCollisionCostData(
   );
   console.log("willignessToPay", totalWillingnessToPay);
 
-
   const totalCosts = calculateTotalCollisionCost(collisions, "totalCosts");
 
-
+  const daysInYear = 365;
 
   return {
     collisionsPerYear: {
@@ -163,10 +164,10 @@ export function calculateCollisionCostData(
       bike: bikeCount,
     },
     costPerDay: {
-      total: Math.round(totalCosts / collisions.length),
-      directCosts: Math.round(totalDirectCosts / collisions.length),
-      humanCapitalCosts: Math.round(totalHumanCapitalCosts / collisions.length),
-      willignessToPay: Math.round(totalWillingnessToPay / collisions.length),
+      total: Math.round(totalCosts / daysInYear),
+      directCosts: Math.round(totalDirectCosts / daysInYear),
+      humanCapitalCosts: Math.round(totalHumanCapitalCosts / daysInYear),
+      willignessToPay: Math.round(totalWillingnessToPay / daysInYear),
     },
   };
 }
