@@ -139,6 +139,18 @@ export default function AboutPage() {
               </Table>
             </div>
 
+            <div className="mb-4 text-gray-600 text-sm">
+              <strong>Source:</strong>{" "}
+              <a 
+                href="https://drivetolive.ca/wp-content/uploads/2020/07/CollisionCostStudyUpdate_FinalReport.pdf" 
+                className="text-blue-600 hover:underline" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                Collision Cost Study Update (Final Report)
+              </a>
+            </div>
+
             <div
               className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-md"
               role="alert"
