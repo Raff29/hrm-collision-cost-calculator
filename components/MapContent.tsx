@@ -47,7 +47,7 @@ export default function MapContent({
     useState<BoundingBox | null>(null);
 
 
-  const { showError } = useSnackbar();
+  const { showError, showWarning} = useSnackbar();
 
   const handleRectangleDrawn = async (
     boundingBox: BoundingBox,
@@ -88,6 +88,9 @@ export default function MapContent({
       if (onCollisionDataChange) {
         onCollisionDataChange(costData);
         // console.log(costData);
+      }
+      if (finalCollisions.length === 0) {
+        showWarning("No collisions found")
       }
 
       // console.log("Collisions fetched:", {
