@@ -57,6 +57,11 @@ export default function CostAnalysis({
     }).format(amount);
   };
 
+  const getPercentage = (part: number, total: number): number => {
+    if (!total) return 0;
+    return Math.round((part / total) * 100);
+  };
+
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -167,19 +172,17 @@ export default function CostAnalysis({
               <div
                 className="h-2 bg-hrm-blue rounded-full"
                 style={{
-                  width: `${
-                    (costData.collisionsPerYear.pedestrian /
-                      costData.collisionsPerYear.total) *
-                    100
-                  }%`,
+                  width: `${getPercentage(
+                    costData.collisionsPerYear.pedestrian,
+                    costData.collisionsPerYear.total
+                  )}%`,
                 }}
               ></div>
             </div>
             <p className="text-xs text-gray-500 mt-1">
-              {Math.round(
-                (costData.collisionsPerYear.pedestrian /
-                  costData.collisionsPerYear.total) *
-                  100
+              {getPercentage(
+                costData.collisionsPerYear.pedestrian,
+                costData.collisionsPerYear.total
               )}
               % of total collisions
             </p>
@@ -208,19 +211,17 @@ export default function CostAnalysis({
               <div
                 className="h-2 bg-hrm-accent rounded-full"
                 style={{
-                  width: `${
-                    (costData.collisionsPerYear.bike /
-                      costData.collisionsPerYear.total) *
-                    100
-                  }%`,
+                  width: `${getPercentage(
+                    costData.collisionsPerYear.bike,
+                    costData.collisionsPerYear.total
+                  )}%`,
                 }}
               ></div>
             </div>
             <p className="text-xs text-gray-500 mt-1">
-              {Math.round(
-                (costData.collisionsPerYear.bike /
-                  costData.collisionsPerYear.total) *
-                  100
+              {getPercentage(
+                costData.collisionsPerYear.bike,
+                costData.collisionsPerYear.total
               )}
               % of total collisions
             </p>
