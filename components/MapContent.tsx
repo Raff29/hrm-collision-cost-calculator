@@ -19,6 +19,7 @@ import {
   calculateCollisionCostData,
 } from "@/lib/services/costCalculationService";
 import { useSnackbar } from "@/hooks/use-toast";
+import UnderReportingToggle from "./UnderReportingToggle";
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -46,12 +47,14 @@ export default function MapContent({
   const [currentBoundingBox, setCurrentBoundingBox] =
     useState<BoundingBox | null>(null);
 
-
-  const { showError, showWarning} = useSnackbar();
+  const { showError, showWarning } = useSnackbar();
+  const [applyUnderReportingFactor, setApplyUnderReportingFactor] =
+    useState<boolean>(true);
 
   const handleRectangleDrawn = async (
     boundingBox: BoundingBox,
-    yearOverride?: number
+    yearOverride?: number,
+    underReportingOverride?: boolean
   ) => {
     try {
       setCurrentBoundingBox(boundingBox);
@@ -79,35 +82,24 @@ export default function MapContent({
 
       const nonAutoData = nonVehicleCollisionsData(finalCollisions);
 
+      const useUnderReporting =
+        underReportingOverride !== undefined
+          ? underReportingOverride
+          : applyUnderReportingFactor;
+
       const costData = calculateCollisionCostData(
         finalCollisions,
         nonAutoData.pedestrian,
-        nonAutoData.bike
+        nonAutoData.bike,
+        useUnderReporting
       );
 
       if (onCollisionDataChange) {
         onCollisionDataChange(costData);
-        // console.log(costData);
       }
       if (finalCollisions.length === 0) {
-        showWarning("No collisions found")
+        showWarning("No collisions found");
       }
-
-      // console.log("Collisions fetched:", {
-      //   year: filterYear || "All Years",
-      //   totalCount: result.count,
-      //   filteredCount: finalCollisions.length,
-      //   futureRecordsRemoved: result.count - finalCollisions.length,
-      //   coordinates: boundingBox,
-      //   pedestrian: nonAutoData.pedestrian,
-      //   bicycle: nonAutoData.bike,
-      //   sampleCollisionDate: finalCollisions[0]
-      //     ? new Date(
-      //         finalCollisions[0].attributes.ACCIDENT_DATETIME
-      //       ).toLocaleString()
-      //     : "No collisions found",
-      //   sampleCollision: finalCollisions[0]?.attributes,
-      // });
     } catch (error) {
       if (error instanceof Error) {
         showError(error.message);
@@ -131,6 +123,16 @@ export default function MapContent({
   return (
     <div>
       <YearSelector onYearChange={handleYearClick} initialYear={selectedYear} />
+
+      <UnderReportingToggle
+        checked={applyUnderReportingFactor}
+        onToggle={(checked) => {
+          setApplyUnderReportingFactor(checked);
+          if (currentBoundingBox) {
+            handleRectangleDrawn(currentBoundingBox, selectedYear, checked);
+          }
+        }}
+      />
       <MapContainer
         center={[44.6488, -63.5752]}
         zoom={13}
