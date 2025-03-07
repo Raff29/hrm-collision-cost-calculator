@@ -68,7 +68,7 @@ export const aboutContent = {
       {
         title: "Sensitivity Analysis",
         points: [
-          "Users can adjust key parameters such as the injury underreporting multiplier and the inflation adjustment rate to see how these factors affect the overall cost estimates."
+          "Users can adjust key parameters such as the injury underreporting multiplier and the inflation adjustment rate to see how these factors affect the overall cost estimates.*Not yet available.*"
         ]
       }
     ]
