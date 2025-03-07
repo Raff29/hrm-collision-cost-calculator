@@ -27,6 +27,9 @@ export default function CostAnalysis({
       willignessToPay: 0,
       pedestrian: 0,
       bike: 0,
+      originalInjuryCount: 0,
+      adjustedInjuryCount: 0,
+      underReportingFactorApplied: false
     },
     costPerDay: {
       total: 0,
