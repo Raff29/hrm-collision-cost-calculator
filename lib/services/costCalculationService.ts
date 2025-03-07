@@ -107,6 +107,9 @@ export interface CollisionCostData {
     willignessToPay: number;
     pedestrian: number;
     bike: number;
+    originalInjuryCount: number;
+    adjustedInjuryCount: number;
+    underReportingFactorApplied: boolean;
   };
   costPerDay: {
     total: number;
@@ -119,7 +122,8 @@ export interface CollisionCostData {
 export function calculateCollisionCostData(
   collisions: CollisionFeature[],
   pedestrianCount: number,
-  bikeCount: number
+  bikeCount: number,
+  applyUnderReportingFactor: boolean = true
 ): CollisionCostData {
   const fatalCollisions: CollisionFeature[] = [];
   const injuryCollisions: CollisionFeature[] = [];
@@ -138,14 +142,22 @@ export function calculateCollisionCostData(
 
   const INJURY_UNDER_REPORTING_FACTOR = 1.78;
   const originalInjuryCount = injuryCollisions.length;
-  const adjustedInjuryCount = Math.round(
-    originalInjuryCount * INJURY_UNDER_REPORTING_FACTOR
-  );
+
+  let adjustedInjuryCount = originalInjuryCount;
+  if (applyUnderReportingFactor) {
+    adjustedInjuryCount = Math.round(
+      originalInjuryCount * INJURY_UNDER_REPORTING_FACTOR
+    );
+  }
+
   const additionalInjuries = adjustedInjuryCount - originalInjuryCount;
 
   const adjustedInjuryCollisions = [...injuryCollisions];
+  const convertedCollisions: CollisionFeature[] = [];
+
   for (let i = 0; i < additionalInjuries && pdoCollisions.length > 0; i++) {
     const convertedCollision = pdoCollisions.pop()!;
+    convertedCollisions.push(convertedCollision);
     adjustedInjuryCollisions.push(convertedCollision);
   }
 
@@ -155,28 +167,44 @@ export function calculateCollisionCostData(
     ...pdoCollisions,
   ];
 
-  // const severityCounts = {
-  //   [CollisionSeverity.FATALITY]: fatalCollisions.length,
-  //   [CollisionSeverity.INJURY]: adjustedInjuryCount,
-  //   [CollisionSeverity.PROPERTY_DAMAGE_ONLY]: pdoCollisions.length,
-  // };
-  // console.log("Adjusted collision severity counts:", severityCounts);
+  function getAdjustedCollisionCost(
+    collision: CollisionFeature,
+    costType: CostType = "totalCosts"
+  ): number {
+    if (convertedCollisions.includes(collision)) {
+      return COLLISION_COSTS[CollisionSeverity.INJURY][costType];
+    }
 
-  const totalDirectCosts = calculateTotalCollisionCost(
+    const severity = determineSeverity(collision);
+    return COLLISION_COSTS[severity][costType];
+  }
+
+  function calculateAdjustedTotalCost(
+    collisions: CollisionFeature[],
+    costType: CostType = "totalCosts"
+  ): number {
+    let totalCost = 0;
+    for (const collision of collisions) {
+      totalCost += getAdjustedCollisionCost(collision, costType);
+    }
+    return totalCost;
+  }
+
+  const totalDirectCosts = calculateAdjustedTotalCost(
     adjustedCollisions,
     "directCosts"
   );
-  const totalHumanCapitalCosts = calculateTotalCollisionCost(
+  const totalHumanCapitalCosts = calculateAdjustedTotalCost(
     adjustedCollisions,
     "humanCapitalCosts"
   );
 
-  const totalWillingnessToPay = calculateTotalCollisionCost(
+  const totalWillingnessToPay = calculateAdjustedTotalCost(
     adjustedCollisions,
     "willignessToPay"
   );
 
-  const totalCosts = calculateTotalCollisionCost(
+  const totalCosts = calculateAdjustedTotalCost(
     adjustedCollisions,
     "totalCosts"
   );
@@ -191,6 +219,9 @@ export function calculateCollisionCostData(
       willignessToPay: totalWillingnessToPay,
       pedestrian: pedestrianCount,
       bike: bikeCount,
+      originalInjuryCount: originalInjuryCount,
+      adjustedInjuryCount: adjustedInjuryCount,
+      underReportingFactorApplied: applyUnderReportingFactor,
     },
     costPerDay: {
       total: Math.round(totalCosts / daysInYear),
