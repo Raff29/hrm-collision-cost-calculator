@@ -57,15 +57,18 @@ export default function CostAnalysis({
     }).format(amount);
   };
 
-  const getPercentage = (part: number, total: number): string => {
-    if (!total) return "0%";
-
+  const getPercentageValue = (part: number, total: number): number => {
+    if (!total) return 0;
     const percentage = (part / total) * 100;
+    return percentage
+  }
 
+  const getPercentage = (part: number, total: number) : string => {
+    if (!total) return "0%";
+    const percentage = (part / total) * 100;
     if (percentage < 1) {
       return percentage.toFixed(1) + "%";
     }
-
     return Math.round(percentage) + "%";
   };
 
@@ -179,7 +182,7 @@ export default function CostAnalysis({
               <div
                 className="h-2 bg-hrm-blue rounded-full"
                 style={{
-                  width: `${getPercentage(
+                  width: `${getPercentageValue(
                     costData.collisionsPerYear.pedestrian,
                     costData.collisionsPerYear.total
                   )}%`,
@@ -218,7 +221,7 @@ export default function CostAnalysis({
               <div
                 className="h-2 bg-hrm-accent rounded-full"
                 style={{
-                  width: `${getPercentage(
+                  width: `${getPercentageValue(
                     costData.collisionsPerYear.bike,
                     costData.collisionsPerYear.total
                   )}%`,
