@@ -20,9 +20,6 @@ export default function Header() {
               </Link>
             </li>
             <li>
-              <Link href="/#contact" className="hover:text-hrm-light transition-colors">
-                Contact
-              </Link>
             </li>
           </ul>
         </nav>
