@@ -1,7 +1,7 @@
 export const landingContent = {
   instructions: {
-    title: "Click the rectangle button in the top-right corner and drag on the map to select an area for collision analysis",
-    icon: "MapPin" // You can use different icon names that match your Lucide icons
+    title: "Click the rectangle button in the top-right corner, then click and drag on the map to select an area for collision analysis",
+    icon: "MapPin"
   },
   analysis: {
     title: "Collision Cost Analysis",
