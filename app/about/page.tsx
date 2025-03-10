@@ -79,7 +79,7 @@ export default function AboutPage() {
                       )}
                       {category.title}
                     </h3>
-                    <p className="text-gray-700">{category.description}.</p>
+                    <p className="text-gray-700">{category.description}</p>
                   </CardContent>
                 </Card>
               ))}
