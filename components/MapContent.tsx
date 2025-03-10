@@ -20,6 +20,7 @@ import {
 } from "@/lib/services/costCalculationService";
 import { useSnackbar } from "@/hooks/use-toast";
 import UnderReportingToggle from "./UnderReportingToggle";
+import InstructionBanner from "./InstructionBAnner";
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -133,6 +134,7 @@ export default function MapContent({
           }
         }}
       />
+      <InstructionBanner />
       <MapContainer
         center={[44.6488, -63.5752]}
         zoom={13}
