@@ -1,16 +1,13 @@
 import { Feature } from "geojson";
 
-
-const HRM_API_ENDPOINT = process.env.NEXT_PUBLIC_HRM_API_ENDPOINT;
-
 interface CollisionAttributes {
   COLLISION_SK: number;
   // CASE_FILE_NUMBER: number;
   WGS84_LAT_COORD: string;
   WGS84_LON_COORD: string;
-  ROAD_LOCATION_1: string;
+  // ROAD_LOCATION_1: string;
   // ROAD_LOCATION_2: string;
-  COLLISION_CONFIGURATION: string;
+  // COLLISION_CONFIGURATION: string;
   NON_FATAL_INJURY: string;
   FATAL_INJURY: string;
   PEDESTRIAN_COLLISIONS: string;
@@ -51,7 +48,6 @@ export interface NonAutoCollisions {
   pedestrian: number;
   bike: number;
 }
-
 
 export function nonVehicleCollisionsData(
   collisionData: CollisionFeature[]
@@ -102,7 +98,7 @@ export async function fetchCollisionsData(
   const paramsData: Record<string, string> = {
     where: "1=1",
     outFields:
-      "COLLISION_SK,WGS84_LAT_COORD,WGS84_LON_COORD,ROAD_LOCATION_1,COLLISION_CONFIGURATION,NON_FATAL_INJURY,FATAL_INJURY,PEDESTRIAN_COLLISIONS,BICYCLE_COLLISIONS,ACCIDENT_DATETIME",
+      "COLLISION_SK,WGS84_LAT_COORD,WGS84_LON_COORD,NON_FATAL_INJURY,FATAL_INJURY,PEDESTRIAN_COLLISIONS,BICYCLE_COLLISIONS,ACCIDENT_DATETIME",
     outSR: "4326",
     f: "json",
     geometry: JSON.stringify(geometry),
@@ -115,7 +111,8 @@ export async function fetchCollisionsData(
   const params = new URLSearchParams(paramsData);
 
   try {
-    const response = await fetch(`${HRM_API_ENDPOINT}?${params}`);
+    const response = await fetch(`/api/collisions?${params}`);
+
     if (!response.ok) throw new Error("Network response was not ok");
     const data: CollisionResponse = await response.json();
 
