@@ -11,6 +11,7 @@ import {
   PersonStanding,
 } from "lucide-react";
 import { CollisionCostData } from "@/lib/services/costCalculationService";
+import { landingContent } from "@/app/content/landing";
 
 export default function CostAnalysis({
   year,
@@ -29,7 +30,7 @@ export default function CostAnalysis({
       bike: 0,
       originalInjuryCount: 0,
       adjustedInjuryCount: 0,
-      underReportingFactorApplied: false
+      underReportingFactorApplied: false,
     },
     costPerDay: {
       total: 0,
@@ -63,10 +64,10 @@ export default function CostAnalysis({
   const getPercentageValue = (part: number, total: number): number => {
     if (!total) return 0;
     const percentage = (part / total) * 100;
-    return percentage
-  }
+    return percentage;
+  };
 
-  const getPercentage = (part: number, total: number) : string => {
+  const getPercentage = (part: number, total: number): string => {
     if (!total) return "0%";
     const percentage = (part / total) * 100;
     if (percentage < 1) {
@@ -86,7 +87,7 @@ export default function CostAnalysis({
           )}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Collisions in {displayYear}
+              {landingContent.analysis.cards.collisions.title} in {displayYear}
             </CardTitle>
             <AlertTriangle className="h-4 w-4 opacity-70" />
           </CardHeader>
@@ -94,7 +95,9 @@ export default function CostAnalysis({
             <div className="text-2xl font-bold">
               {costData.collisionsPerYear.total}
             </div>
-            <p className="text-xs opacity-70">Total reported incidents</p>
+            <p className="text-xs opacity-70">
+              {landingContent.analysis.cards.collisions.description}
+            </p>
           </CardContent>
         </Card>
         <Card className="bg-white border-l-4 border-hrm-blue relative">
@@ -105,7 +108,7 @@ export default function CostAnalysis({
           )}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-hrm-blue">
-              Total Annual Cost
+              {landingContent.analysis.cards.totalCost.title}
             </CardTitle>
             <DollarSign className="h-4 w-4 text-hrm-blue" />
           </CardHeader>
@@ -117,7 +120,9 @@ export default function CostAnalysis({
                   costData.collisionsPerYear.willignessToPay
               )}
             </div>
-            <p className="text-xs text-gray-500">Combined economic impact</p>
+            <p className="text-xs text-gray-500">
+              {landingContent.analysis.cards.totalCost.description}
+            </p>
           </CardContent>
         </Card>
         <Card className="bg-white border-l-4 border-hrm-accent relative">
@@ -128,7 +133,7 @@ export default function CostAnalysis({
           )}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-hrm-accent">
-              Human Capital Cost
+              {landingContent.analysis.cards.humanCapital.title}
             </CardTitle>
             <Users className="h-4 w-4 text-hrm-accent" />
           </CardHeader>
@@ -136,7 +141,9 @@ export default function CostAnalysis({
             <div className="text-2xl font-bold text-hrm-blue">
               {formatCurrency(costData.collisionsPerYear.humanCapitalCosts)}
             </div>
-            <p className="text-xs text-gray-500">Annual productivity loss</p>
+            <p className="text-xs text-gray-500">
+              {landingContent.analysis.cards.humanCapital.description}
+            </p>
           </CardContent>
         </Card>
         <Card className="bg-white border-l-4 border-hrm-accent relative">
@@ -147,7 +154,7 @@ export default function CostAnalysis({
           )}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-hrm-accent">
-              Willingness to Pay
+              {landingContent.analysis.cards.willingnessToPay.title}
             </CardTitle>
             <TrendingUp className="h-4 w-4 text-hrm-accent" />
           </CardHeader>
@@ -156,7 +163,7 @@ export default function CostAnalysis({
               {formatCurrency(costData.collisionsPerYear.willignessToPay)}
             </div>
             <p className="text-xs text-gray-500">
-              Value of safety improvements
+              {landingContent.analysis.cards.willingnessToPay.description}
             </p>
           </CardContent>
         </Card>
@@ -170,7 +177,7 @@ export default function CostAnalysis({
           )}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-hrm-blue">
-              Pedestrian Collisions
+              {landingContent.analysis.cards.pedestrian.title}
             </CardTitle>
             <PersonStanding className="h-4 w-4 text-hrm-blue" />
           </CardHeader>
@@ -179,7 +186,7 @@ export default function CostAnalysis({
               {costData.collisionsPerYear.pedestrian}
             </div>
             <p className="text-xs text-gray-500">
-              Incidents involving pedestrians
+              {landingContent.analysis.cards.pedestrian.description}
             </p>
             <div className="mt-2 h-2 bg-gray-200 rounded-full">
               <div
@@ -209,7 +216,7 @@ export default function CostAnalysis({
           )}
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-hrm-accent">
-              Bicycle Collisions
+              {landingContent.analysis.cards.bicycle.title}
             </CardTitle>
             <Bike className="h-4 w-4 text-hrm-accent" />
           </CardHeader>
@@ -218,7 +225,7 @@ export default function CostAnalysis({
               {costData.collisionsPerYear.bike}
             </div>
             <p className="text-xs text-gray-500">
-              Incidents involving cyclists
+              {landingContent.analysis.cards.bicycle.description}
             </p>
             <div className="mt-2 h-2 bg-gray-200 rounded-full">
               <div
@@ -249,14 +256,14 @@ export default function CostAnalysis({
         )}
         <CardHeader>
           <CardTitle className="text-lg font-semibold text-hrm-blue">
-            Daily Cost Breakdown ({displayYear})
+            {landingContent.analysis.cards.dailyCost.title} ({displayYear})
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium text-hrm-accent">
-                Total Daily Cost:
+                {landingContent.analysis.cards.dailyCost.fields.totalDaily}
               </span>
               <span className="text-lg font-bold text-hrm-blue">
                 {formatCurrency(costData.costPerDay.total)}
@@ -264,19 +271,28 @@ export default function CostAnalysis({
             </div>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Direct Cost:</span>
+                <span className="text-gray-600">
+                  {landingContent.analysis.cards.dailyCost.fields.direct}
+                </span>
                 <span className="font-medium text-hrm-accent">
                   {formatCurrency(costData.costPerDay.directCosts)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Human Capital:</span>
+                <span className="text-gray-600">
+                  {landingContent.analysis.cards.dailyCost.fields.humanCapital}
+                </span>
                 <span className="font-medium text-hrm-accent">
                   {formatCurrency(costData.costPerDay.humanCapitalCosts)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Willingness to Pay:</span>
+                <span className="text-gray-600">
+                  {
+                    landingContent.analysis.cards.dailyCost.fields
+                      .willingnessToPay
+                  }
+                </span>
                 <span className="font-medium text-hrm-accent">
                   {formatCurrency(costData.costPerDay.willignessToPay)}
                 </span>
