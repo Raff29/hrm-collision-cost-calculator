@@ -1,4 +1,15 @@
 export const landingContent = {
+  header: {
+    title: "HRM Vehicle Collision Cost Estimator",
+    fields: {
+        home: "Home",
+        about: "About"
+    },
+  },
+  tooltip: {
+      title: "Apply injury under-reporting factor (1.78x)",
+      description: "Applies a factor of 1.78x to injury collisions to account for under-reporting in official statistics."
+  },
   instructions: {
     title: "Click the rectangle button in the top-right corner, then click and drag on the map to select an area for collision analysis",
     icon: "MapPin"
@@ -41,5 +52,11 @@ export const landingContent = {
         }
       }
     }
+  },
+  footer: {
+    title: "Developed by Raphael Pinto"
+  },
+  loading: {
+    title: "Loading collision data..."
   }
 }
