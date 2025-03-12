@@ -17,12 +17,14 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-hrm-light transition-colors"
+            data-testid="github-link"
           >
             <FaGithub className="w-6 h-6" />
           </a>
           <a
             href="mailto:raphael.pinto1@outlook.com"
             className="hover:text-hrm-light transition-colors"
+            data-testid="email-link"
           >
             <FaEnvelope className="w-6 h-6" />
           </a>
