@@ -3,7 +3,6 @@ import { cleanup, render } from "@testing-library/react";
 import React from "react";
 import "@testing-library/jest-dom";
 import { Control } from "leaflet";
-import { useMapEvent } from "react-leaflet";
 
 jest.mock("leaflet-draw", () => {});
 jest.mock("leaflet-draw/dist/leaflet.draw.css", () => ({}));
@@ -121,7 +120,5 @@ describe("DrawMap Components", () => {
     });
   });
 
-  it('removes precious rectangle from drawing new one', () => {
-    
-  })
+  it("removes precious rectangle from drawing new one", () => {});
 });
