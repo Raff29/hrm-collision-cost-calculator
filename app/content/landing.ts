@@ -11,7 +11,7 @@ export const landingContent = {
       description: "Applies a factor of 1.78x to injury collisions to account for under-reporting in official statistics."
   },
   instructions: {
-    title: "Click the rectangle button in the top-right corner, then click and drag on the map to select an area for collision analysis",
+    title: "Click the rectangle button in the top-left corner, then click and drag on the map to select an area for collision analysis",
     icon: "MapPin"
   },
   analysis: {
